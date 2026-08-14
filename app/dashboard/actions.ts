@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { getRequestOrigin, buildPatientMagicLink } from "@/lib/app-origin";
+import { buildPatientMagicLink } from "@/lib/app-origin";
+import { getRequestOrigin } from "@/lib/app-origin.server";
 import { getCurrentProfile } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/server";
 
