@@ -5,7 +5,10 @@ export {
   buildPatientMagicLink,
   extractYouTubeEmbedUrl,
   getComplianceStatus,
+  getComplianceLabel,
   getCurrentProfile,
+  getDashboardPatients,
+  getExerciseLibrary,
   getPrescriptionByToken,
   logCompletionByToken,
 } from "./queries";

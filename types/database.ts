@@ -262,6 +262,7 @@ export type PrescriptionItemWithExercise = PrescriptionItem & {
 export type PatientWithPrescription = Patient & {
   prescription: Prescription | null;
   compliance_status: ComplianceStatus;
+  compliance_label: string;
   last_completed_at: string | null;
   latest_pain_score: number | null;
   streak_days: number;

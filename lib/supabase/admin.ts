@@ -11,8 +11,13 @@ export function createAdminClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceRoleKey) {
+    const missing = [
+      !url ? "NEXT_PUBLIC_SUPABASE_URL" : null,
+      !serviceRoleKey ? "SUPABASE_SERVICE_ROLE_KEY" : null,
+    ].filter(Boolean);
+
     throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY",
+      `Missing ${missing.join(" and ")}. Add them to .env.local (see .env.local.example).`,
     );
   }
 
