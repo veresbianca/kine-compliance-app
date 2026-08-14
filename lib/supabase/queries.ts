@@ -124,14 +124,6 @@ function startOfLocalDay(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-export function buildPatientMagicLink(token: string, origin?: string) {
-  const base =
-    origin ??
-    process.env.NEXT_PUBLIC_APP_URL ??
-    "http://localhost:3000";
-  return `${base.replace(/\/$/, "")}/p/${token}`;
-}
-
 export async function getExerciseLibrary(supabase: AppSupabaseClient) {
   const { data, error } = await supabase
     .from("exercise_library")

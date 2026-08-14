@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { buildPatientMagicLink } from "@/lib/supabase/queries";
+import { buildPatientMagicLink } from "@/lib/app-origin";
 import type { PatientWithPrescription } from "@/types/database";
 
 type PatientTableProps = {
@@ -31,7 +31,7 @@ function formatDate(value: string | null) {
 
 export function PatientTable({ patients }: PatientTableProps) {
   async function copyLink(token: string) {
-    const link = buildPatientMagicLink(token);
+    const link = buildPatientMagicLink(token, window.location.origin);
 
     try {
       await navigator.clipboard.writeText(link);

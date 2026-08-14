@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { buildPatientMagicLink, getCurrentProfile } from "@/lib/supabase/queries";
+import { getRequestOrigin, buildPatientMagicLink } from "@/lib/app-origin";
+import { getCurrentProfile } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/server";
 
 export type SelectedExerciseInput = {
@@ -103,8 +104,10 @@ export async function createPatientWithPrescription(input: {
 
   revalidatePath("/dashboard");
 
+  const origin = await getRequestOrigin();
+
   return {
     success: true,
-    magicLink: buildPatientMagicLink(prescription.magic_token),
+    magicLink: buildPatientMagicLink(prescription.magic_token, origin),
   };
 }
