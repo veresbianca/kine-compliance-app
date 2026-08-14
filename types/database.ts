@@ -8,143 +8,18 @@ export type Json =
 
 export type ComplianceStatus = "green" | "yellow" | "red";
 
-export interface Profile {
-  id: string;
-  email: string;
-  full_name: string;
-  clinic_name: string | null;
-  created_at: string;
-}
-
-export interface Patient {
-  id: string;
-  therapist_id: string;
-  full_name: string;
-  phone_number: string;
-  created_at: string;
-}
-
-export interface ExerciseLibrary {
-  id: string;
-  title: string;
-  description: string;
-  video_url: string;
-  default_sets: number;
-  default_reps: number;
-  created_at: string;
-}
-
-export interface Prescription {
-  id: string;
-  patient_id: string;
-  therapist_id: string;
-  magic_token: string;
-  active: boolean;
-  created_at: string;
-}
-
-export interface PrescriptionItem {
-  id: string;
-  prescription_id: string;
-  exercise_id: string;
-  sets: number;
-  reps: number;
-  frequency_per_day: number;
-  created_at: string;
-}
-
-export interface CompletionLog {
-  id: string;
-  prescription_id: string;
-  completed_at: string;
-  pain_score: number;
-  patient_notes: string | null;
-  created_at: string;
-}
-
-/** Insert payloads (omit generated fields) */
-export type ProfileInsert = Pick<Profile, "id" | "email" | "full_name"> & {
-  clinic_name?: string | null;
-};
-
-export type PatientInsert = Pick<
-  Patient,
-  "therapist_id" | "full_name" | "phone_number"
->;
-
-export type ExerciseLibraryInsert = Pick<
-  ExerciseLibrary,
-  "title" | "description" | "video_url" | "default_sets" | "default_reps"
->;
-
-export type PrescriptionInsert = Pick<
-  Prescription,
-  "patient_id" | "therapist_id"
-> & {
-  magic_token?: string;
-  active?: boolean;
-};
-
-export type PrescriptionItemInsert = Pick<
-  PrescriptionItem,
-  "prescription_id" | "exercise_id" | "sets" | "reps" | "frequency_per_day"
->;
-
-export type CompletionLogInsert = Pick<
-  CompletionLog,
-  "prescription_id" | "pain_score"
-> & {
-  patient_notes?: string | null;
-  completed_at?: string;
-};
-
-/** Joined / view types used by the app */
-export interface PrescriptionItemWithExercise extends PrescriptionItem {
-  exercise: ExerciseLibrary;
-}
-
-export interface PatientWithPrescription extends Patient {
-  prescription: Prescription | null;
-  compliance_status: ComplianceStatus;
-  last_completed_at: string | null;
-  latest_pain_score: number | null;
-  streak_days: number;
-}
-
-export interface PatientPrescriptionView {
-  prescription: Pick<Prescription, "id" | "magic_token" | "active" | "created_at">;
-  patient: Pick<Patient, "id" | "full_name">;
-  therapist: Pick<Profile, "clinic_name" | "full_name">;
-  items: Array<{
-    id: string;
-    sets: number;
-    reps: number;
-    frequency_per_day: number;
-    exercise: Pick<
-      ExerciseLibrary,
-      | "id"
-      | "title"
-      | "description"
-      | "video_url"
-      | "default_sets"
-      | "default_reps"
-    >;
-  }>;
-  streak_days: number;
-  logged_today: boolean;
-}
-
-export interface LogCompletionResult {
-  log_id: string;
-  streak_days: number;
-}
-
 /** Supabase Database typing for typed clients */
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       profiles: {
-        Row: Profile;
+        Row: {
+          id: string;
+          email: string;
+          full_name: string;
+          clinic_name: string | null;
+          created_at: string;
+        };
         Insert: {
           id: string;
           email: string;
@@ -161,7 +36,13 @@ export interface Database {
         Relationships: [];
       };
       patients: {
-        Row: Patient;
+        Row: {
+          id: string;
+          therapist_id: string;
+          full_name: string;
+          phone_number: string;
+          created_at: string;
+        };
         Insert: {
           id?: string;
           therapist_id: string;
@@ -185,7 +66,15 @@ export interface Database {
         ];
       };
       exercise_library: {
-        Row: ExerciseLibrary;
+        Row: {
+          id: string;
+          title: string;
+          description: string;
+          video_url: string;
+          default_sets: number;
+          default_reps: number;
+          created_at: string;
+        };
         Insert: {
           id?: string;
           title: string;
@@ -206,7 +95,14 @@ export interface Database {
         Relationships: [];
       };
       prescriptions: {
-        Row: Prescription;
+        Row: {
+          id: string;
+          patient_id: string;
+          therapist_id: string;
+          magic_token: string;
+          active: boolean;
+          created_at: string;
+        };
         Insert: {
           id?: string;
           patient_id: string;
@@ -238,7 +134,15 @@ export interface Database {
         ];
       };
       prescription_items: {
-        Row: PrescriptionItem;
+        Row: {
+          id: string;
+          prescription_id: string;
+          exercise_id: string;
+          sets: number;
+          reps: number;
+          frequency_per_day: number;
+          created_at: string;
+        };
         Insert: {
           id?: string;
           prescription_id: string;
@@ -272,7 +176,14 @@ export interface Database {
         ];
       };
       completion_logs: {
-        Row: CompletionLog;
+        Row: {
+          id: string;
+          prescription_id: string;
+          completed_at: string;
+          pain_score: number;
+          patient_notes: string | null;
+          created_at: string;
+        };
         Insert: {
           id?: string;
           prescription_id: string;
@@ -318,4 +229,71 @@ export interface Database {
       };
     };
   };
-}
+};
+
+/** Table row types derived from the database schema */
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type Patient = Database["public"]["Tables"]["patients"]["Row"];
+export type ExerciseLibrary =
+  Database["public"]["Tables"]["exercise_library"]["Row"];
+export type Prescription = Database["public"]["Tables"]["prescriptions"]["Row"];
+export type PrescriptionItem =
+  Database["public"]["Tables"]["prescription_items"]["Row"];
+export type CompletionLog =
+  Database["public"]["Tables"]["completion_logs"]["Row"];
+
+/** Insert payloads */
+export type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
+export type PatientInsert = Database["public"]["Tables"]["patients"]["Insert"];
+export type ExerciseLibraryInsert =
+  Database["public"]["Tables"]["exercise_library"]["Insert"];
+export type PrescriptionInsert =
+  Database["public"]["Tables"]["prescriptions"]["Insert"];
+export type PrescriptionItemInsert =
+  Database["public"]["Tables"]["prescription_items"]["Insert"];
+export type CompletionLogInsert =
+  Database["public"]["Tables"]["completion_logs"]["Insert"];
+
+/** Joined / view types used by the app */
+export type PrescriptionItemWithExercise = PrescriptionItem & {
+  exercise: ExerciseLibrary;
+};
+
+export type PatientWithPrescription = Patient & {
+  prescription: Prescription | null;
+  compliance_status: ComplianceStatus;
+  last_completed_at: string | null;
+  latest_pain_score: number | null;
+  streak_days: number;
+};
+
+export type PatientPrescriptionView = {
+  prescription: Pick<
+    Prescription,
+    "id" | "magic_token" | "active" | "created_at"
+  >;
+  patient: Pick<Patient, "id" | "full_name">;
+  therapist: Pick<Profile, "clinic_name" | "full_name">;
+  items: Array<{
+    id: string;
+    sets: number;
+    reps: number;
+    frequency_per_day: number;
+    exercise: Pick<
+      ExerciseLibrary,
+      | "id"
+      | "title"
+      | "description"
+      | "video_url"
+      | "default_sets"
+      | "default_reps"
+    >;
+  }>;
+  streak_days: number;
+  logged_today: boolean;
+};
+
+export type LogCompletionResult = {
+  log_id: string;
+  streak_days: number;
+};
